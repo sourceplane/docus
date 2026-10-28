@@ -1,0 +1,19 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: DU-2
+  title: "Docus on Workers and D1"
+spec:
+  goal: Docus's default starter runs on Cloudflare Workers + Static Assets through Nitro's cloudflare_module preset, every page prerendered, Nuxt Content's queries and the MCP server on a D1 database its Terraform root provisions for stage and prod
+  affects:
+    - apps/web
+    - infra
+    - tests/web
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - README.md
+    - .gitignore
+  doneWhen:
+    - pnpm typecheck, lint, test and build are green
+    - wrangler dev serves the pages, the sitemap, llms.txt and the raw Markdown, and the MCP server answers from an empty local D1 that Nuxt Content filled
+  gates: []
