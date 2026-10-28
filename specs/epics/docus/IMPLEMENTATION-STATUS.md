@@ -4,7 +4,7 @@
 |---|---|---|
 | DU0 — the spec | ✅ | the repository's first commit |
 | DU1 — Docus on Workers and D1 | ✅ | DU-2 |
-| DU2 — a baseline | planned | DU-3 |
+| DU2 — a baseline | ✅ | DU-3, tagged `baseline-v1` |
 
 ## Departures from the upstream template
 

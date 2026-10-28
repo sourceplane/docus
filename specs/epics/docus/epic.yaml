@@ -9,7 +9,7 @@ metadata:
 spec:
   title: "Vercel's Docus template on Cloudflare Workers and D1"
   summary: "Docus's default starter — Markdown documentation on Nuxt and Nuxt Content, with search, dark mode, Open Graph images, llms.txt, raw Markdown for agents and an MCP server — run on Cloudflare Workers + Static Assets through Nitro's cloudflare_module preset, every page prerendered and Nuxt Content's queries on a Cloudflare D1 database Terraform provisions per environment; and become an Orun baseline that takes a new documentation site from nothing to live on stage and prod in one landing."
-  state: started
+  state: completed
   milestones:
     - name: "DU0 — the spec"
       exitCriteria:
