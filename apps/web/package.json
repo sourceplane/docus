@@ -1,0 +1,28 @@
+{
+  "name": "@app/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Documentation written in Markdown, built with Docus on Nuxt and Nuxt Content.",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "wrangler dev",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt prepare && vue-tsc --noEmit -p .nuxt/tsconfig.node.json",
+    "lint": "nuxt prepare && vue-tsc --noEmit -p .nuxt/tsconfig.node.json",
+    "wire:fixture": "node ../../tooling/wire/render.mjs --template wrangler.template.jsonc --out wrangler.jsonc --map wiring.fixture.json --env stage"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.3.1",
+    "agents": "^0.31.0",
+    "better-sqlite3": "^12.11.1",
+    "docus": "5.15.0",
+    "nuxt": "^4.4.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vue-tsc": "^3.2.0",
+    "wrangler": "^4.151.0"
+  }
+}
