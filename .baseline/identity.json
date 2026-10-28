@@ -1,0 +1,9 @@
+{
+  "_comment": "THIS TREE'S OWN IDENTITY — the FROM side of every rebrand. tooling/rebrand/rebrand.mjs reads it to know what to rename AWAY from; a product's identity is the --values file, which is the TO side. Change a value here only together with the tree: these strings must be what the tree actually contains, or the rename silently misses and the product ships carrying this baseline's name. `productName` is the SITE_NAME seam in apps/web/site.ts; `slug` also names the D1 databases (terraform `repo`) and the secret project; `pascal` is the code form the leftover sweep looks for — not `Docus`, which is the template's own name all through its documentation, so it is a form nothing here spells; `domain` and `subdomain` are placeholders, because this baseline has never deployed under a name of its own; `githubOwner` is the owner in the source links the docs carry.",
+  "slug": "docus",
+  "pascal": "DocusBaseline",
+  "productName": "Docus",
+  "domain": "docus.example.com",
+  "subdomain": "your-workers-subdomain",
+  "githubOwner": "sourceplane"
+}
