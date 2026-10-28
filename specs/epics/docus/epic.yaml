@@ -1,0 +1,30 @@
+# The epic's declaration. metadata.name equals the directory name; metadata.key
+# is the task-key prefix this epic reserves (DU → DU-1, DU-2, …). Owner, target
+# date and health are the platform's — never written here.
+apiVersion: orun.io/v1
+kind: Epic
+metadata:
+  name: docus
+  key: DU
+spec:
+  title: "Vercel's Docus template on Cloudflare Workers and D1"
+  summary: "Docus's default starter — Markdown documentation on Nuxt and Nuxt Content, with search, dark mode, Open Graph images, llms.txt, raw Markdown for agents and an MCP server — run on Cloudflare Workers + Static Assets through Nitro's cloudflare_module preset, every page prerendered and Nuxt Content's queries on a Cloudflare D1 database Terraform provisions per environment; and become an Orun baseline that takes a new documentation site from nothing to live on stage and prod in one landing."
+  state: started
+  milestones:
+    - name: "DU0 — the spec"
+      exitCriteria:
+        - "the repository is born with its intent, CI, tooling and spec index, and this doc set and the task contracts are on main"
+      tasks: [DU-1]
+    - name: "DU1 — Docus on Workers and D1"
+      exitCriteria:
+        - "apps/web is Docus's default starter (docus 5.15.0, its content unchanged), built by Nitro's cloudflare_module preset into one Worker with every page prerendered as static assets"
+        - "Nuxt Content's database is the D1 binding DB, created and filled by Nuxt Content on the first query; the D1 root provisions stage and prod"
+        - "`pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` are green"
+        - "`wrangler dev` serves the pages, the sitemap, llms.txt and the raw Markdown, and the MCP server answers from an empty local D1 Nuxt Content filled"
+      tasks: [DU-2]
+    - name: "DU2 — a baseline"
+      exitCriteria:
+        - "blueprint.yaml (the console card) and repo-blueprint.yaml (the build) take a new site from nothing to live on stage and prod in one landing, then record it"
+        - "a site built from it carries the site only, renamed throughout to its own name, repository, Worker and database"
+        - "Baseline CI is green: contract tests, the wiring path, generated component docs, the blueprint read by the pinned orun, the leak gate, the offline bootstrap and the end-to-end tier"
+      tasks: [DU-3]
