@@ -1,0 +1,24 @@
+// GENERATED from wrangler.template.jsonc by tooling/wire — edit the
+// template, not this file. The committed copy is the fixture render
+// (`pnpm run wire:fixture`); every Orun lane renders its own environment.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "docus-web",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./.output/public",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+  // Nuxt Content's database — Cloudflare D1, in place of the SQLite file a
+  // Node server keeps. Nuxt Content creates and fills its tables itself.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "stg-docus-stage",
+      "database_id": "00000000-0000-0000-0000-000000000001"
+    }
+  ]
+}

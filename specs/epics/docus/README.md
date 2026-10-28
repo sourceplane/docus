@@ -8,7 +8,7 @@ documentation site in one landing.**
 
 | | |
 |---|---|
-| Status | In progress — DU0 on main |
+| Status | In progress — DU1 on main: the site runs on Workers |
 | Upstream | [nuxt-content/docus](https://github.com/nuxt-content/docus) `.starters/default` (MIT), at `2a9009e` (2026-10-20): docus 5.15.0, Nuxt 4.6, Nuxt Content 3.16 |
 | Reference | [turso-starter](https://github.com/sourceplane/turso-starter) — D1 and its wiring; [nuxt-boilerplate](https://github.com/sourceplane/nuxt-boilerplate) — Nuxt on Nitro's `cloudflare_module` preset |
 | Key | `DU` |

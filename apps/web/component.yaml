@@ -1,0 +1,108 @@
+apiVersion: sourceplane.io/v1
+kind: Component
+metadata:
+  name: web
+  description: The documentation site (Docus on Nuxt, Cloudflare Workers + Static Assets through Nitro's cloudflare_module preset, Nuxt Content on D1, per environment)
+spec:
+  type: cloudflare-workers-assets-turbo
+  lifecycle: production
+  owner: platform
+  # Its pages, attached to it in the workspace's catalog: what the Docs
+  # library shows for it, and what the catalog's docs and runbook checks read.
+  # Generated from what this manifest and its sources declare.
+  docs:
+    overview: docs/overview.md
+    pages:
+      - { path: docs/architecture.md, role: architecture, title: Architecture }
+      - { path: docs/runbook.md, role: runbook, title: Runbook }
+  # `app`, not `web`: a domain and a component share one name space in the
+  # catalog, and a domain called `web` hid this component from it.
+  domain: app
+  path: apps/web
+  # Its own lane per environment: the Nuxt build is the longest job in the
+  # plan, and a shared lane would wait on it.
+  lane: isolated
+  # INFRA BEFORE APP. The Worker binds the D1 database by id, and the id is
+  # rendered into its config during the build from the wiring document the
+  # cloudflare-d1 root lease-publishes after its apply. A job resolves its
+  # secrets when it STARTS, so on a merge to main this deploy waits for that
+  # apply (enforced) — one convergence runs cloudflare-d1 → web per
+  # environment. Nuxt Content needs no migration: it creates and fills its
+  # tables from the dump the build bundles, on the first query. A pull request
+  # deploys nothing, so nothing on one waits (advisory).
+  dependsOn:
+    - component: cloudflare-d1
+      mode: enforced
+      modeRules:
+        - mode: advisory
+          when:
+            triggerRef: github-pull-request
+  secretEnv:
+    WIRING_CLOUDFLARE_D1_STAGE: "secret://docus/docus/stage/WIRING_CLOUDFLARE_D1"
+    WIRING_CLOUDFLARE_D1_PROD: "secret://docus/docus/prod/WIRING_CLOUDFLARE_D1"
+  subscribe:
+    environments:
+      - name: dev
+        profile: verify
+      - name: stage
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+      - name: prod
+        profile: verify
+        profileRules:
+          - profile: deploy
+            when:
+              triggerRef: github-push-main
+  parameters:
+    nodeVersion: "22"
+    pnpmVersion: "10.12.1"
+
+    workspaceDir: ../..
+    appDir: .
+
+    turboFilter: "@app/web"
+    wranglerConfig: wrangler.jsonc
+
+    # Nitro's cloudflare_module preset emits the Worker under .output/server
+    # and the prerendered pages and assets under .output/public — both deploy
+    # in one `wrangler deploy`.
+    workerEntrypoint: .output/server/index.mjs
+    assetsDir: .output/public
+
+    # Per-env worker name: docus-web-{dev,stage,prod}.
+    workerName: docus-web
+    environmentAwareWorkerName: true
+
+    # The account's workers.dev subdomain; exported to the smoke step as
+    # ${WORKERS_DEV_SUBDOMAIN} and used to build ${DEPLOYED_URL}.
+    workersDevSubdomain: your-workers-subdomain
+
+    installCommand: pnpm install --frozen-lockfile
+    # Render this environment's wrangler config, then build. stage and prod
+    # render from the wiring document their cloudflare-d1 apply published
+    # (secretEnv above, resolved before the job's first step); dev, which no
+    # root applies to and which only verifies, renders from the committed
+    # fixture. The committed wrangler.jsonc (the fixture render) is what the
+    # composition's verify-app-structure step finds before this runs.
+    # NUXT_SITE_URL is the site's origin (canonical links, the sitemap,
+    # llms.txt, Open Graph URLs): the environment's SITE_URL when intent.yaml
+    # sets one, else its workers.dev URL. ${ORUN_ENVIRONMENT} the runner sets
+    # for every step.
+    buildCommand: node ../../tooling/wire/live.mjs --template wrangler.template.jsonc --out wrangler.jsonc --components cloudflare-d1 --env "${ORUN_ENVIRONMENT}" --fixture wiring.fixture.json --fixture-envs dev && NUXT_SITE_URL="${SITE_URL:-https://docus-web-${ORUN_ENVIRONMENT}.your-workers-subdomain.workers.dev}" pnpm exec turbo run build --filter=@app/web
+
+    # Smoke: the prerendered home page is Docus's (its Nuxt root), and the MCP
+    # server's `list-pages` tool answers with the site's pages — which only
+    # the Worker can, by querying Nuxt Content in its D1 database (filled
+    # from the build's dump on that first query), so it proves the database
+    # bound and the Worker serving. Not the site's name: that is the owner's
+    # to change and HTML-escaped when it carries an `&` or `'`. Each response
+    # is buffered before grep so an early match cannot SIGPIPE curl.
+    smokeCommand: "html=$(curl -sfL \"${DEPLOYED_URL}/\") && echo \"${html}\" | grep -q 'id=\"__nuxt\"' && mcp=$(curl -sf -X POST -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"list-pages\",\"arguments\":{}}}' \"${DEPLOYED_URL}/mcp\") && echo \"${mcp}\" | grep -q 'getting-started'"
+  labels:
+    team: platform
+    layer: delivery
+    surface: web
+    runtime: cloudflare

@@ -7,6 +7,6 @@ folder is the adoption; the merge creates the epic in the workspace.
 
 | Epic | Cluster | Status | What it is |
 |------|---------|--------|------------|
-| [`docus/`](./docus/) | **DU** | In progress (DU0) | Vercel's Docus template — Markdown documentation on Nuxt and Nuxt Content — on Cloudflare Workers with every page prerendered and Nuxt Content's queries on D1, and an Orun baseline that instantiates it in one landing (DU2) |
+| [`docus/`](./docus/) | **DU** | In progress (DU1: the site on Workers) | Vercel's Docus template — Markdown documentation on Nuxt and Nuxt Content — on Cloudflare Workers with every page prerendered and Nuxt Content's queries on D1, and an Orun baseline that instantiates it in one landing (DU2) |
 
 As-built ≠ intent: what shipped lives in each epic's `IMPLEMENTATION-STATUS.md`.
